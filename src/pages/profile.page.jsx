@@ -10,7 +10,7 @@ import InPageNavigation from "../components/inpage-navigation.component";
 import BlogPostCard from "../components/blog-post.component";
 import NoDataMessage from "../components/nodata.component";
 import LoadMoreDataBtn from "../components/load-more.component";
-import MinimalBlogPost from "../components/nobanner-blog-post.component";
+import PageNotFound from "./404.page";
 export const profileDataStructure = {
   personal_info: {
     fullname: "",
@@ -32,6 +32,7 @@ const ProfilePage = () => {
   let [profile, setProfile] = useState(profileDataStructure);
   let [loading, setLoading] = useState(true);
   let [blogs, setBlogs] = useState(null);
+  let [profileLoaded, setProfileLoaded] = useState("");
 
   let {
     personal_info: { fullname, username: profile_username, profile_img, bio },
@@ -50,7 +51,10 @@ const ProfilePage = () => {
         username: profileId,
       })
       .then(({ data: user }) => {
-        setProfile(user);
+        if (user != null) {
+          setProfile(user);
+        }
+        setProfileLoaded(profileId);
         getBlogs({ user_id: user._id });
         setLoading(false);
       })
@@ -82,21 +86,28 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-    resetStates();
+    if (profileId != profileLoaded) {
+      setBlogs(null);
+    }
 
-    fetchUserProfile();
-  }, [profileId]);
+    if (blogs == null) {
+      resetStates();
+
+      fetchUserProfile();
+    }
+  }, [profileId, blogs]);
 
   const resetStates = () => {
     setProfile(profileDataStructure);
     setBlogs(null);
     setLoading(true);
+    setProfileLoaded("");
   };
   return (
     <AnimationWrapper>
       {loading ? (
         <Loader />
-      ) : (
+      ) : profile_username.length ? (
         <section className="h-cover md:flex flex-row-reverse items-start gap-5 min-[1100px]:gap-12">
           <div className="flex flex-col max-md:items-center gap-5 min-w-[250px] md:w-[50%] md:pl-8 md:border-l border-grey md:sticky md:top-[100px] md:py-10">
             <img
@@ -167,6 +178,8 @@ const ProfilePage = () => {
             </InPageNavigation>
           </div>
         </section>
+      ) : (
+        <PageNotFound />
       )}
     </AnimationWrapper>
   );
