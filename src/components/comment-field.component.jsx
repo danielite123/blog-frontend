@@ -86,7 +86,7 @@ const CommentField = ({
 
         setBlog({
           ...blog,
-          comments,
+
           comments: { ...comments, results: newCommentArr },
           activity: {
             ...activity,

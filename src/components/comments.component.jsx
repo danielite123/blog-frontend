@@ -103,16 +103,14 @@ const CommentsContainer = () => {
         <NoDataMessage message="No comment" />
       )}
 
-      {total_parent_comments > totalParentCommentsLoaded ? (
+      {/* {total_parent_comments > totalParentCommentsLoaded ? (
         <button
           onClick={loadMoreComments}
           className="text-dark-grey p-2 px-3 hover:bg-grey/30 rounded-md flex items-center gap-2"
         >
           Load more
         </button>
-      ) : (
-        " "
-      )}
+      ) : null} */}
     </div>
   );
 };

@@ -158,6 +158,22 @@ const CommentCard = ({ index, leftVal, commentData }) => {
 
     setReplying((preVal) => !preVal);
   };
+
+  const LoadMoreRepliesButton = () => {
+    let parentIndex = getParentIndex();
+
+    if (commentsArr[index + 1]) {
+      if (
+        commentsArr[index + 1].childrenLevel < commentsArr[index].childrenLevel
+      ) {
+        return (
+          <button className="text-dark-grey p-2 px-3 hover:bg-grey/30 rounded-md flex items-center gap-2">
+            Load more Replies
+          </button>
+        );
+      }
+    }
+  };
   return (
     <div className="w-full" style={{ paddingLeft: `${leftVal * 10}px` }}>
       <div className="my-5 p-6 rounded-md border border-grey">
@@ -218,6 +234,7 @@ const CommentCard = ({ index, leftVal, commentData }) => {
           ""
         )}
       </div>
+      <LoadMoreRepliesButton />
     </div>
   );
 };
