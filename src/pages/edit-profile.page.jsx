@@ -4,13 +4,16 @@ import axios from "axios";
 import { profileDataStructure } from "./profile.page";
 import AnimationWrapper from "../common/page-animation";
 import Loader from "../components/loader.component";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import InputBox from "../components/input.component";
+import { uploadImage } from "../common/aws";
+import { storeInSession } from "../common/session";
 
 const EditProfile = () => {
   let {
     userAuth,
     userAuth: { access_token },
+    setUserAuth,
   } = useContext(UserContext);
 
   let bioLimit = 150;
@@ -20,6 +23,7 @@ const EditProfile = () => {
   const [profile, setProfile] = useState(profileDataStructure);
   const [loading, setLoading] = useState(true);
   const [charactersLeft, setCharactersLeft] = useState(bioLimit);
+  const [updatedProfileImg, setUpdatedProfileImg] = useState(null);
 
   let {
     personal_info: {
@@ -56,6 +60,56 @@ const EditProfile = () => {
     let img = e.target.files[0];
 
     profileImgEle.current.src = URL.createObjectURL(img);
+
+    setUpdatedProfileImg(img);
+  };
+
+  const handleImageUpload = (e) => {
+    e.preventDefault();
+
+    if (updatedProfileImg) {
+      let loadingToast = toast.loading("Uploading");
+
+      e.target.setAttribute("disabled", true);
+
+      uploadImage(updatedProfileImg)
+        .then((url) => {
+          if (url) {
+            axios
+              .post(
+                import.meta.env.VITE_SERVER_DOMAIN + "/update-profile-img",
+                { url },
+                {
+                  headers: {
+                    Authorization: `Bearer ${access_token}`,
+                  },
+                }
+              )
+              .then(({ data }) => {
+                let newUserAuth = {
+                  ...userAuth,
+                  profile_img: data.profile_img,
+                };
+
+                storeInSession("user", JSON.stringify(newUserAuth));
+                setUserAuth(newUserAuth);
+
+                setUpdatedProfileImg(null);
+
+                toast.dismiss(loadingToast);
+                e.target.removeAttribute("disabled");
+
+                toast.success("Uploaded 👍");
+              });
+          }
+        })
+        .catch(({ response }) => {
+          toast.dismiss(loadingToast);
+          e.target.removeAttribute("disabled");
+
+          toast.error(response.data.error);
+        });
+    }
   };
   return (
     <AnimationWrapper>
@@ -86,7 +140,10 @@ const EditProfile = () => {
                 hidden
                 onChange={handleImagePreview}
               />
-              <button className="btn-light mt-5 max-lg:center lg:w-full px-10">
+              <button
+                className="btn-light mt-5 max-lg:center lg:w-full px-10"
+                onClick={handleImageUpload}
+              >
                 Upload
               </button>
             </div>
