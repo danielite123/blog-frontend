@@ -1,8 +1,33 @@
-# React + Vite
+# SharpQuill ✒️
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A clean and minimal Markdown editor built for speed, simplicity, and focus. Write, preview, and export your content with zero distractions.
 
-Currently, two official plugins are available:
+## 🌐 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Check it out here: [sharpquill.netlify.app](https://sharpquill.netlify.app)
+
+## ⚙️ Features
+
+- Real-time Markdown preview
+- Syntax highlighting
+- Dark/light mode toggle
+- Responsive layout
+- Export to `.md` or `.txt`
+
+## 🚀 Tech Stack
+
+- **React**
+- **Vite**
+- **Tailwind CSS**
+- **Marked** for Markdown parsing
+- **Prism.js** for code highlighting
+
+## 🛠️ Getting Started
+
+Clone the repo and install dependencies:
+
+```bash
+git clone https://github.com/your-username/sharpquill.git
+cd sharpquill
+npm install
+npm run dev
