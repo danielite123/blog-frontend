@@ -4,7 +4,7 @@ import { UserContext } from "../App";
 
 const SideNav = () => {
   let {
-    userAuth: { access_token },
+    userAuth: { access_token, new_notification_available },
   } = useContext(UserContext);
 
   let page = location.pathname.split("/")[2];
@@ -38,7 +38,7 @@ const SideNav = () => {
     <Navigate to="/signin" />
   ) : (
     <>
-      <section className="relative flex gap-10 py-0 m-0 max-md:flex-col">
+      <section className="relative flex gap-10 max-md:gap-0  py-0 m-0 max-md:flex-col">
         <div className="sticky top-[80px] z-30">
           <div className="md:hidden bg-white py-1 border-b border-grey flex flex-nowrap overflow-x-auto">
             <button
@@ -82,11 +82,18 @@ const SideNav = () => {
               Blogs
             </NavLink>
             <NavLink
-              to="/dashboard/notification"
+              to="/dashboard/notifications"
               onClick={(e) => setPageState(e.target.innerText)}
               className="sidebar-link"
             >
-              <i className="fi fi-rr-bell" />
+              <div className="relative">
+                <i className="fi fi-rr-bell" />
+                {new_notification_available ? (
+                  <span className="bg-red w-2 h-2 rounded-full absolute z-10 top-0 right-0"></span>
+                ) : (
+                  ""
+                )}
+              </div>
               Notification
             </NavLink>
             <NavLink
