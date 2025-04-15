@@ -1,17 +1,38 @@
 import { Link } from "react-router-dom";
 import { getDay } from "../common/date";
+import { useContext, useState } from "react";
+import NotificationCommentField from "./notification-comment-field.component";
+import { UserContext } from "../App";
 
 const NotificationCard = ({ data, index, notificationState }) => {
+  let [isReplying, setReplying] = useState(false);
+
   let {
     type,
+    reply,
     createdAt,
     comment,
     replied_on_comment,
+    user,
     user: {
       personal_info: { profile_img, fullname, username },
     },
-    blog: { blog_id, title },
+    blog: { _id, blog_id, title },
+    _id: notification_id,
   } = data;
+
+  let {
+    userAuth: {
+      username: author_username,
+      profile_img: author_profile_img,
+      access_token,
+    },
+  } = useContext(UserContext);
+
+  const handleReplyClick = () => {
+    setReplying((preVal) => !preVal);
+  };
+
   return (
     <div className="p-6 border-b border-grey border-l-black">
       <div className="flex gap-5 mb-3">
@@ -64,13 +85,67 @@ const NotificationCard = ({ data, index, notificationState }) => {
 
         {type != "like" ? (
           <>
-            <button className="underline hover:text-black">Reply</button>
+            {!reply ? (
+              <button
+                className="underline hover:text-black"
+                onClick={handleReplyClick}
+              >
+                Reply
+              </button>
+            ) : (
+              ""
+            )}
             <button className="underline hover:text-bl]">Delete</button>
           </>
         ) : (
           ""
         )}
       </div>
+
+      {isReplying ? (
+        <div className="mt-8">
+          <NotificationCommentField
+            _id={_id}
+            blog_author={user}
+            index={index}
+            replyingTo={comment._id}
+            setReplying={setReplying}
+            notification_id={notification_id}
+            notificationData={notificationState}
+          />
+        </div>
+      ) : (
+        ""
+      )}
+
+      {reply ? (
+        <div className="ml-20 p-5 bg-grey mt-5 rounded-md">
+          <div className="flex gap-3 mb-3">
+            <img src={author_profile_img} className="w-8 h-8 rounded-full" />
+
+            <div className="font-medium text-xl text-dark-grey">
+              <h1>
+                <Link
+                  to={`/user/${author_username}`}
+                  className="mx-1 text-black underline"
+                >
+                  @{author_username}
+                </Link>
+                <span className="font-normal">replied to</span>
+                <Link
+                  to={`/user/${username}`}
+                  className="mx-1 text-black underline"
+                >
+                  @{username}
+                </Link>
+              </h1>
+            </div>
+          </div>
+          <p className="ml-14 font-gelasio text-xl my-2">{reply.comment}</p>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
