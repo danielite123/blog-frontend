@@ -15,6 +15,7 @@ import EditProfile from "./pages/edit-profile.page";
 import Notifications from "./pages/notifications.page";
 
 export const UserContext = createContext({});
+
 const App = () => {
   const [userAuth, setUserAuth] = useState({});
 
