@@ -32,7 +32,7 @@ const BlogEditor = () => {
     if (!textEditor.isReady) {
       setTextEditor(
         new EditorJs({
-          holderId: "textEditor",
+          holder: "textEditor",
           data: Array.isArray(content) ? content[0] : content,
           tools: tools,
           placeholder: "Let's write awesome story",
@@ -148,7 +148,7 @@ const BlogEditor = () => {
             toast.success("Saved 👍");
 
             setTimeout(() => {
-              navigate("/");
+              navigate("/dashboard/blogs?tab=draft");
             }, 500);
           })
           .catch(({ response }) => {

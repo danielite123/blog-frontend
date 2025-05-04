@@ -17,7 +17,7 @@ const HomePage = () => {
 
   let categories = [
     "programming",
-    "hollwood",
+    "hollywood",
     "film making",
     "social media",
     "cooking",
